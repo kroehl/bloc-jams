@@ -17,6 +17,21 @@ window.onload = function(){
     if (window.innerHeight > 950){
         animatePoints(pointsArray);
     }
+<<<<<<< HEAD
+=======
+    
+    //var sellingPoints = document.getElementsByClassName("selling-points")[0];
+    //var scrollDistance = sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
+    
+    window.addEventListener('scroll', function(event){
+        if (pointsArray[0].getBoundingClientRect().top <= 500){
+            animatePoints(pointsArray);
+        
+        }
+    });
+}
+
+>>>>>>> 6a63587faa1ae2ed8517c162ca3b48b20760f2ba
     
 
     
