@@ -32,6 +32,45 @@ var setVolume = function(volume) {
     }
  };
 
+var setCurrentTimeInPlayerBar = function(currentTime){
+
+    currentSoundFile.bind('timeupdate', function(event) {
+          
+        var timeOfSoundFile = currentSoundFile.getTime();
+        $currentTime.text(timeOfSoundFile)
+        
+    });
+    
+   
+};
+
+// currentTime = "240"
+// setCurrentTimeInPlayerBar(currentTime); // player bar now says 240
+// filterTimeCode(currentTime); // 4:00
+// setCurrentTimeInPlayerBar(filterTimeCode(currentTime)); // player bar now says 4:00
+
+var setTotalTimeInPlayerBar = function(totalTime){
+ 
+    $totalTime.text(currentSongFromAlbum.duration);
+};
+
+var filterTimeCode = function (timeInSeconds){
+    //convert seconds to number form
+    var time = parseFloat(timeInSeconds);
+    
+    //calc seconds to minutes
+    var wholeMinutes = Math.floor(time / 60);
+    //calc remainder of seconds as wholeSeconds
+    var wholeSeconds = Math.floor(time % 60);
+    
+   
+    var formattedTime = wholeMinutes+':'+wholeSeconds;
+    return formattedTime;
+
+   
+};
+  
+
 
 var getSongNumberCell= function(number){
     // Return the element with a class of "song-item-number" and an attribute of "data-song-number" that has a value of `number`
@@ -67,6 +106,8 @@ var togglePlayFromPlayerBar = function() {
 };
 
 var createSongRow = function (songNumber, songName, songLength) {
+    
+    
     var template = 
         '<tr class="album-view-song-item">'
     + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
@@ -74,7 +115,7 @@ var createSongRow = function (songNumber, songName, songLength) {
     + '  <td class="song-item-duration">' + songLength + '</td>'
     + '</tr>'
     ;
- 
+    
     var $row = $(template);
     
     var clickHandler = function() {
@@ -128,6 +169,7 @@ var createSongRow = function (songNumber, songName, songLength) {
                 currentlyPlayingSongNumber = null;
                 }
            }
+
         
     };
     
@@ -267,6 +309,10 @@ var updatePlayerBarSong = function () {
     $('.currently-playing .artist-name').text(currentAlbum.artist);
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
     $('.main-controls .play-pause').html(playerBarPauseButton);
+    
+    setCurrentTimeInPlayerBar((filterTimeCode()));
+    setTotalTimeInPlayerBar();
+    
 };
 
 var nextSong = function (){
@@ -294,10 +340,7 @@ var nextSong = function (){
     updateSeekBarWhileSongPlays();
     
     // Update the Player Bar information
-    $('.currently-playing .song-name').text(currentSongFromAlbum.title);
-    $('.currently-playing .artist-name').text(currentAlbum.artist);
-    $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.title);
-    $('.main-controls .play-pause').html(playerBarPauseButton);
+    updatePlayerBarSong();
     
     var lastSongNumber = getLastSongNumber(currentSongIndex);
     var $nextSongNumberCell = getSongNumberCell(currentlyPlayingSongNumber);
@@ -330,10 +373,7 @@ var previousSong = function() {
     //Continuously update seek bar
     updateSeekBarWhileSongPlays();
     // Update the Player Bar information
-    $('.currently-playing .song-name').text(currentSongFromAlbum.title);
-    $('.currently-playing .artist-name').text(currentAlbum.artist);
-    $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.title);
-    $('.main-controls .play-pause').html(playerBarPauseButton);
+    updatePlayerBarSong();
     
     var lastSongNumber = getLastSongNumber(currentSongIndex);
     var $previousSongNumberCell = getSongNumberCell(currentlyPlayingSongNumber);
@@ -357,9 +397,12 @@ var currentSongFromAlbum = null;
 var currentSoundFile = null;
 var currentVolume = 80;
 
+
 var $playPauseButton = $('.main-controls .play-pause');
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
+var $totalTime = $('.total-time');
+var $currentTime = $('.current-time');
 
 $(document).ready(function() {
     setCurrentAlbum(albumPicasso);
