@@ -33,11 +33,11 @@ var setVolume = function(volume) {
  };
 
 var setCurrentTimeInPlayerBar = function(currentTime){
-
+    
     currentSoundFile.bind('timeupdate', function(event) {
           
         var timeOfSoundFile = currentSoundFile.getTime();
-        $currentTime.text(timeOfSoundFile)
+        $currentTime.text(filterTimeCode(timeOfSoundFile));
         
     });
     
@@ -51,8 +51,10 @@ var setCurrentTimeInPlayerBar = function(currentTime){
 
 var setTotalTimeInPlayerBar = function(totalTime){
  
-    $totalTime.text(currentSongFromAlbum.duration);
+    $totalTime.text(filterTimeCode(currentSongFromAlbum.duration));
+    
 };
+
 
 var filterTimeCode = function (timeInSeconds){
     //convert seconds to number form
@@ -112,7 +114,7 @@ var createSongRow = function (songNumber, songName, songLength) {
         '<tr class="album-view-song-item">'
     + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
     + '  <td class="song-item-title">' + songName + '</td>'
-    + '  <td class="song-item-duration">' + songLength + '</td>'
+    + '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
     + '</tr>'
     ;
     
@@ -221,6 +223,7 @@ var setCurrentAlbum = function (album) {
         var $newRow = createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
          $albumSongList.append($newRow);
     }
+   
 };
 
 var updateSeekBarWhileSongPlays = function() {
@@ -426,3 +429,4 @@ $albumImage.addEventListener("click", function(event){       //set eventListener
         index = 0;
     }
 });
+
